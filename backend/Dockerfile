@@ -1,12 +1,23 @@
-FROM node:24
+# Stage 1
+FROM node:22.17.0-alpine AS build
 
 WORKDIR /app
 
-COPY backend/package*.json ./
+COPY package*.json ./
 
-RUN npm install --production
+RUN npm install --legacy-peer-deps
 
-COPY backend/ .
+COPY . .
+
+RUN npm prune --omit=dev
+
+
+# Stage 2
+FROM node:22.17.0-alpine
+
+WORKDIR /app
+
+COPY --from=build /app ./
 
 EXPOSE 8000
 

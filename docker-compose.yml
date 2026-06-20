@@ -5,21 +5,26 @@ services:
     build: ./backend/ # dockerfile path
     depends_on:
       - mongodb
+
+    ports:
+      - "8000:8000"
+
     environment:
-      MONGO_URI : "mongodb://mongodb:27017/mern_ecommerce"
-      SECRET_KEY: "mine_secret_key"
-      ORIGIN: "http://front_svc:3000"
-      EMAIL: "abdogomaa0155208@gmail.com"
-      PASSWORD: "your-email-password"
+      MONGO_URI : ${MONGO_URI}
+      SECRET_KEY: ${SECRET_KEY}
+      ORIGIN: ${ORIGIN}
+      EMAIL: ${EMAIL}
+      PASSWORD: ${PASSWORD} ## app password 
 
       LOGIN_TOKEN_EXPIRATION: "30d"  # Days
       OTP_EXPIRATION_TIME: "120000"  # Milliseconds
       PASSWORD_RESET_TOKEN_EXPIRATION: "2m"  # Minutes
       COOKIE_EXPIRATION_DAYS: "30"    # Days
 
-      PRODUCTION: "false"
+      PRODUCTION: ${PRODUCTION}
 
     networks:
+      - front_net
       - back_net
   front_svc:
     container_name: ecommerce_front
@@ -28,7 +33,7 @@ services:
     depends_on:
       - back_svc
     environment:
-      REACT_APP_BASE_URL: "http://back_svc:8000"
+      REACT_APP_BASE_URL: ${REACT_APP_BASE_URL}
 
     ports:
       - "3000:3000"
@@ -41,9 +46,9 @@ services:
     image: mongo:latest
 
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: "mern_ecommerce"
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
 
     networks:
       - back_net
