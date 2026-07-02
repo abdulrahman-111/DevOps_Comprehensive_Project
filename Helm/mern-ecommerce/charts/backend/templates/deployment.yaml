@@ -35,12 +35,12 @@ spec:
           - name: MONGO_INITDB_ROOT_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-db-secret 
+                name: {{ .Release.Name }}-back-secret 
                 key: MONGO_INITDB_ROOT_USERNAME
           - name: MONGO_INITDB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-db-secret  
+                name: {{ .Release.Name }}-back-secret  
                 key: MONGO_INITDB_ROOT_PASSWORD
         command:
             - /bin/sh

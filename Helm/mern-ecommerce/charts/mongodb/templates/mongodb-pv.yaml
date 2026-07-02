@@ -14,6 +14,7 @@ spec:
 
   hostPath:
     path: /mnt/data/mongo-1
+    type: DirectoryOrCreate
     
 ---
 apiVersion: v1
@@ -31,3 +32,4 @@ spec:
 
   hostPath:
     path: /mnt/data/mongo-2
+    type: DirectoryOrCreate
