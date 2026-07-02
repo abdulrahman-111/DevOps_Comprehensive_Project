@@ -1,9 +1,11 @@
 # Default values for mern-ecommerce . PARENT CHART 
 
 global:
-  nodeIP: "192.168.163.136"
+  nodeIP: "192.168.163.144"
   back_nodeport: 30021
   front_nodeport: 30020
+  mongodb_ns: mongodb-proj-ns
+  back_ns: back-proj-ns
 
 
 # override values for subcharts 

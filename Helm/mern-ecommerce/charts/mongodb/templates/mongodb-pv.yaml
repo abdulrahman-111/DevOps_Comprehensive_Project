@@ -2,8 +2,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: {{ .Release.Name }}-mongo-pv-1
-  namespace: {{ .Values.mongodb_ns | default "mongodb-proj-ns"}}
-
+  
 spec:
   capacity:
     storage: 2Gi
@@ -20,7 +19,6 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  namespace: {{ .Values.mongodb_ns | default "mongodb-proj-ns"}}
   name: {{ .Release.Name }}-mongo-pv-2
 spec:
   capacity:

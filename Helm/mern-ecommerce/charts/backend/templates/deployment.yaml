@@ -6,7 +6,7 @@ metadata:
   name: {{ .Release.Name }}-back-deployment
   namespace: {{ .Values.back_ns | default "back-proj-ns"}}
   labels:
-    {{ .Release.Name }}-back-deploy
+    app: {{ .Release.Name }}-back-deploy
     
 
 spec:
@@ -35,18 +35,18 @@ spec:
           - name: MONGO_INITDB_ROOT_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-back-secret 
+                name: {{ .Release.Name }}-db-secret 
                 key: MONGO_INITDB_ROOT_USERNAME
           - name: MONGO_INITDB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-back-secret 
+                name: {{ .Release.Name }}-db-secret  
                 key: MONGO_INITDB_ROOT_PASSWORD
         command:
             - /bin/sh
             - -c
             - |
-              MONGO_HOST="{{ .Release.Name }}-db-ss-0.{{ .Release.Name }}-mongo-svc-headless.{{ .Values.mongodb_ns | default "mongodb-proj-ns"}}.svc.cluster.local:27017"
+              MONGO_HOST="{{ .Release.Name }}-db-ss-0.{{ .Release.Name }}-mongo-svc-headless.{{ .Values.global.mongodb_ns | default "mongodb-proj-ns"}}.svc.cluster.local:27017"
 
               echo "Waiting for MongoDB primary..."
               until mongosh "$MONGO_HOST" \

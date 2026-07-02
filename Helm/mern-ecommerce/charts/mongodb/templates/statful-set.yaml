@@ -10,7 +10,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-    {{- include "mongodb.labels" . | nindent 4 }}
+    {{- include "mongodb.labels" . | nindent 6 }}
 
 
   serviceName: {{ .Release.Name }}-mongo-svc-headless
@@ -19,17 +19,17 @@ spec:
   template:
     metadata:
       labels:
-      {{- include "mongodb.labels" . | nindent 4 }}
+      {{- include "mongodb.labels" . | nindent 8 }}
 
     spec:
         volumes:
           - name: mongo-keyfile-secret
             secret:
-            secretName: {{ .Release.Name }}-db-secret 
-            defaultMode: 0400
-            items:
-            - key: mongo-keyfile
-              path: mongo-keyfile
+              secretName: {{ .Release.Name }}-db-secret 
+              defaultMode: 0400
+              items:
+              - key: mongo-keyfile
+                path: mongo-keyfile
 
           - name: mongo-keyfile
             emptyDir: {}

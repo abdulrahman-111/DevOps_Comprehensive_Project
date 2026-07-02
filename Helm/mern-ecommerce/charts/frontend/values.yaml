@@ -12,9 +12,7 @@ image:
 
 
 
-env_url:
-  name: REACT_APP_BASE_URL
-  value: "http://192.168.163.144"
+
 
 
 service:

@@ -31,7 +31,7 @@ spec:
           - /bin/sh
           - -c
           - |
-            BACKEND="http://{{ .Values.env_url.name }}:{{ $.Values.global.back_nodeport }}/"
+            BACKEND="http://{{ $.Values.global.nodeIP }}:{{ $.Values.global.back_nodeport }}/"
             echo "Waiting for backend at $BACKEND..."
             until wget -qO- "$BACKEND" >/dev/null 2>&1; do
               echo "Backend not ready, retrying in 5s..."
@@ -47,8 +47,8 @@ spec:
         - containerPort: 3000
 
         env:
-        - name: {{ .Values.env_url.name }}
-          value: "{{ .Values.env_url.name }}:{{ $.Values.global.back_nodeport }}"
+        - name: REACT_APP_BASE_URL
+          value: "{{ $.Values.global.nodeIP }}:{{ $.Values.global.back_nodeport }}"
 
 
 
