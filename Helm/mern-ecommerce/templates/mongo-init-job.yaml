@@ -1,34 +1,28 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: mongo-rs-init
+  name: {{ .Release.Name }}-mongo-rs-init
   namespace: {{ .Values.mongodb_ns | default "mongodb-proj-ns"}}
-  annotations:
-  "helm.sh/hook": post-install
-  "helm.sh/hook-weight": "0"
-  "helm.sh/hook-delete-policy": hook-succeeded
 
 spec:
-  backoffLimit: 4
-  activeDeadlineSeconds: 300
   template:
     spec:
       restartPolicy: OnFailure
 
       containers:
-      - name: mongo-init
+      - name: {{ .Release.Name }}-mongo-init
         image: mongo:7
       
         env:
           - name: MONGO_INITDB_ROOT_USERNAME
             valueFrom:
               secretKeyRef:
-                name: mongodb-secret
+                name: {{ .Release.Name }}-db-secret 
                 key: MONGO_INITDB_ROOT_USERNAME
           - name: MONGO_INITDB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: mongodb-secret
+                name: {{ .Release.Name }}-db-secret 
                 key: MONGO_INITDB_ROOT_PASSWORD
 
         command:
@@ -37,7 +31,7 @@ spec:
         - |
           sleep 30
           
-          mongosh {{ .Release.Name }}-db-ss-0.{{ .Release.Name }}-mongo-svc-headless.{{ .Values.mongodb_ns | default "mongodb-proj-ns"}}.svc.cluster.local:27017 -u "$MONGO_INITDB_ROOT_USERNAME" -p example "$MONGO_INITDB_ROOT_PASSWORD"  --authenticationDatabase admin --eval '
+          mongosh {{ .Release.Name }}-db-ss-0.{{ .Release.Name }}-mongo-svc-headless.{{ .Values.mongodb_ns | default "mongodb-proj-ns"}}.svc.cluster.local:27017 -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD"  --authenticationDatabase admin --eval '
           rs.initiate({
             _id:"rs0",
             members:[

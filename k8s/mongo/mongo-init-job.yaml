@@ -1,8 +1,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Release.Name }}-mongo-rs-init
-  namespace: {{ .Values.mongodb_ns | default "mongodb-proj-ns"}}
+  name: mongo-rs-init
+  namespace: mongodb-proj-ns
 
 spec:
   template:
@@ -10,19 +10,19 @@ spec:
       restartPolicy: OnFailure
 
       containers:
-      - name: {{ .Release.Name }}-mongo-init
+      - name: mongo-init
         image: mongo:7
       
         env:
           - name: MONGO_INITDB_ROOT_USERNAME
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-db-secret 
+                name: mongodb-secret
                 key: MONGO_INITDB_ROOT_USERNAME
           - name: MONGO_INITDB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ .Release.Name }}-db-secret 
+                name: mongodb-secret
                 key: MONGO_INITDB_ROOT_PASSWORD
 
         command:
@@ -31,12 +31,12 @@ spec:
         - |
           sleep 30
 
-          mongosh {{ .Release.Name }}-db-ss-0.{{ .Release.Name }}-mongo-svc-headless.mongodb-proj-ns.svc.cluster.local:27017 -u "$MONGO_INITDB_ROOT_USERNAME" -p example "$MONGO_INITDB_ROOT_PASSWORD"  --authenticationDatabase admin --eval '
+          mongosh db-ss-0.mongo-svc-headless.mongodb-proj-ns.svc.cluster.local:27017 -u "$MONGO_INITDB_ROOT_USERNAME" -p  "$MONGO_INITDB_ROOT_PASSWORD"  --authenticationDatabase admin --eval '
           rs.initiate({
             _id:"rs0",
             members:[
-              {_id:0,host:"{{ .Release.Name }}-db-ss-0.{{ .Release.Name }}-mongo-svc-headless.mongodb-proj-ns.svc.cluster.local:27017"},
-              {_id:1,host:"{{ .Release.Name }}-db-ss-1.{{ .Release.Name }}-mongo-svc-headless.mongodb-proj-ns.svc.cluster.local:27017"}
+              {_id:0,host:"db-ss-0.mongo-svc-headless.mongodb-proj-ns.svc.cluster.local:27017"},
+              {_id:1,host:"db-ss-1.mongo-svc-headless.mongodb-proj-ns.svc.cluster.local:27017"}
             ]
           })
           '
