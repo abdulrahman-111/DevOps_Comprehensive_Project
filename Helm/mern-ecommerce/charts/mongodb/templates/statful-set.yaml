@@ -3,7 +3,7 @@ kind: StatefulSet
 
 metadata:
   name: {{ .Release.Name }}-db-ss
-  namespace: {{ .Values.mongodb_ns | default "mongodb-proj-ns"}}
+  namespace: {{ .Values.global.mongodb_ns | default .Values.mongodb_ns | default "mongodb-proj-ns"}}
   labels:
     name:  {{ .Release.Name }}-mongo-SS
 
