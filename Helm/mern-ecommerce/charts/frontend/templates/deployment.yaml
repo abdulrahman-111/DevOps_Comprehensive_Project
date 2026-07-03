@@ -42,7 +42,14 @@ spec:
       containers:
       - name: {{ .Release.Name }}-front-container
         image: {{  .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}
-
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1024Mi
+            
         ports: 
         - containerPort: 3000
 

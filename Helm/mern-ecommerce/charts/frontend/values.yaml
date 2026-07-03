@@ -3,7 +3,7 @@
 
 front_ns: front-proj-ns
 
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: abdulrahman011/devops_comprehensive_project_depi_front_svc

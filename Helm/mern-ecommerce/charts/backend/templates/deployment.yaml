@@ -10,7 +10,7 @@ metadata:
     
 
 spec:
-  replicas: 2
+  replicas: {{  .Values.replicaCount | default "1" }}
   selector:
     matchLabels:
     {{- include "backend.labels" . | nindent 6 }}
@@ -66,6 +66,15 @@ spec:
         image: {{ .Values.image.repository }}
         ports: 
         - containerPort: 8000
+
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+
 
         env:
             - name: MONGO_URI

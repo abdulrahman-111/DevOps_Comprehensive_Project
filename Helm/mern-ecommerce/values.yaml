@@ -33,7 +33,7 @@ mongodb:
 
 
 backend:
-  replicaCount: 2
+  replicaCount: 1
   back_ns: back-proj-ns
 
   image:
@@ -53,7 +53,7 @@ backend:
 frontend:
   front_ns: front-proj-ns
 
-  replicaCount: 2
+  replicaCount: 1
 
   image:
     repository: abdulrahman011/devops_comprehensive_project_depi_front_svc
