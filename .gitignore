@@ -3,3 +3,4 @@ frontend/.env
 .env
 k8s/back/*secrets.yaml
 Helm/mern-ecommerce/charts/backend/templates/back-secret.yaml
+Helm/mern-ecommerce/charts/backend/templates/back-secert.yaml
