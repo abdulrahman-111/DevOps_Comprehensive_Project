@@ -1,7 +1,7 @@
 # Default values for mern-ecommerce . PARENT CHART 
 
 global:
-  nodeIP: "192.168.163.144"
+  nodeIP: "192.168.163.136"
   back_nodeport: 30021
   front_nodeport: 30020
   mongodb_ns: mongodb-proj-ns
@@ -64,7 +64,7 @@ frontend:
 
   env_url:
     name: REACT_APP_BASE_URL
-    value: "http://192.168.163.144"
+    value: "http://192.168.163.136"
 
 
   service:

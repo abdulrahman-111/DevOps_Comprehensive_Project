@@ -48,7 +48,7 @@ spec:
 
         env:
         - name: REACT_APP_BASE_URL
-          value: "{{ $.Values.global.nodeIP }}:{{ $.Values.global.back_nodeport }}"
+          value: "http://{{ $.Values.global.nodeIP }}:{{ $.Values.global.back_nodeport }}"
 
 
 
