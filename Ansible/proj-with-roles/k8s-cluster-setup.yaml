@@ -47,9 +47,24 @@
   roles:
     - k8s-verification
 
-# play 7: SETup helm argocd monitoring stack 
-- name: play 7 - SETup helm argocd monitoring stack
+# play 7: SETup helm argocd  stack 
+- name: play 7 - SETup helm argocd stack
   hosts: k8s_control_plane
   become: true
   roles:
-    - k8s-helm-argocd-monitoring_STACK
+    - helm-argocd
+
+# play 8: SETup monitoring stack
+- name: play 8 - SETup monitoring stack
+  hosts: k8s_control_plane
+  become: true
+  roles:
+    - prom-stack
+
+
+# play 9: SETup SonarQube
+- name: play 8 - SETup SonarQube stack
+  hosts: sonar
+  become: true
+  roles:
+    - sonar
