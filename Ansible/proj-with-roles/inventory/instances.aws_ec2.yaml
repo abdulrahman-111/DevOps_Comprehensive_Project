@@ -16,8 +16,18 @@ filters:
 
 # Automatically group hosts by their AWS tags  -> we need these group to be in the playbook ? see how 
 keyed_groups:
-  - key: ec2_tags
-    prefix: tag
+  - key: tags.Role
+    prefix: ""
+
+  - key: tags.App
+    prefix: ""
+
+
+groups:
+  k8s_cluster: >
+    tags.Role == 'k8s_control_plane'
+    or tags.Role == 'k8s_workers'
+
 
 # Property Ansible should use to connect ->  public IP
 hostnames:

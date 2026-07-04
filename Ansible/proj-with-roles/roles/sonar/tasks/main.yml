@@ -160,7 +160,7 @@
   - name: Move extracted directory to install path
     ansible.builtin.command:
       cmd: "mv /opt/sonarqube-{{ sonarqube_version }} {{ sonarqube_install_dir }}"
-      creates: "{{ sonarqube_install_dir }}"   # idempotent — only runs if dest doesn't exist
+      creates: "{{ sonarqube_install_dir }}"   # only runs if dest doesn't exist
 
   when: not sonarqube_binary.stat.exists
 

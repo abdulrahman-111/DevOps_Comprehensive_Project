@@ -1,10 +1,10 @@
-#  sonar.properties — managed by Ansible (sonarqube role)
-#  Do not edit manually — changes will be overwritten
+#  sonar.properties  managed by Ansible (sonarqube role)
+#  Do not edit manually changes will be overwritten
 
 #  Database 
 sonar.jdbc.username={{ sonarqube_db_user }}
 sonar.jdbc.password={{ sonarqube_db_pass }}
-sonar.jdbc.url=jdbc:postgresql://{{ sonarqube_db_host }}/{{ sonarqube_db_name }}
+sonar.jdbc.url=jdbc:postgresql://localhost:5432/{{ sonarqube_db_name }}
 
 #  Paths 
 sonar.path.data={{ sonarqube_data_dir }}
