@@ -70,10 +70,10 @@
   changed_when: false
   
 
-- name: copy ingress 
-  copy: 
-    src:  ingress-argocd.yaml
-    dest: /root/ingress-argocd.yaml
+# - name: copy ingress 
+#   copy: 
+#     src:  ingress-argocd.yaml
+#     dest: /root/ingress-argocd.yaml
 
 
 # - name: apply the ingress
