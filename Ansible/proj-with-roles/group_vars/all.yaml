@@ -1,0 +1,4 @@
+---
+# Monitoring server IP — used by promtail and node_exporter targets
+
+monitoring_server_ip: "192.168.163.143"

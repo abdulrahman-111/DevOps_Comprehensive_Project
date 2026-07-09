@@ -1,70 +1,31 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: mongo-svc-headless
-  namespace: mongodb-proj-ns
-  labels:
-    name: mongo-svc
-
-spec:
-  ports:
-    - port: 27017
-      targetPort: 27017
-
-  clusterIP: None ## headless service 
-
-  selector:
-    app: mongodb
-
-
-
-
----
-
-
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: mongodb-clusterip-svc
-  namespace: mongodb-proj-ns
-spec:
-  selector:
-    app: mongodb
-  ports:
-    - port: 27017
-      targetPort: 27017
-
-
-
----
 apiVersion: apps/v1
 kind: StatefulSet
 
 metadata:
-  name: db-ss
-  namespace: mongodb-proj-ns
+  name: {{ .Release.Name }}-db-ss
+  namespace: {{ .Values.global.mongodb_ns | default .Values.mongodb_ns | default "mongodb-proj-ns"}}
+  labels:
+    name:  {{ .Release.Name }}-mongo-SS
 
 spec:
   selector:
     matchLabels:
-      app: mongodb
+    {{- include "mongodb.labels" . | nindent 6 }}
 
 
-  serviceName: "mongo-svc-headless"
-  replicas: 2 
+  serviceName: {{ .Release.Name }}-mongo-svc-headless
+  replicas: {{ .Values.replicaCount }}
   
   template:
-
     metadata:
       labels:
-        app: mongodb
+      {{- include "mongodb.labels" . | nindent 8 }}
 
     spec:
         volumes:
           - name: mongo-keyfile-secret
             secret:
-              secretName: mongodb-secret
+              secretName: {{ .Release.Name }}-db-secret 
               defaultMode: 0400
               items:
               - key: mongo-keyfile
@@ -103,32 +64,58 @@ spec:
             - name: mongo-keyfile
               mountPath: /etc/mongo-keyfile
 
-
+#  fixes hostPath PV ownership since fsGroup doesn't apply to hostPath volumes
+        - name: fix-data-permissions
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              rm -rf /data/db
+              mkdir -p /data/db
+              chown -R 999:999 /data/db
+              chmod -R 750 /data/db
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          volumeMounts:
+            - name: db-data
+              mountPath: /data/db
 
         containers:
         - name: mongodb-container
 
-          image: mongo:latest
+          image: {{  .Values.image.repository }}
 
           ports:
           - containerPort: 27017
+
+
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
 
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-secret
+                  name: {{ .Release.Name }}-db-secret 
                   key: MONGO_INITDB_ROOT_USERNAME
             - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-secret
+                  name: {{ .Release.Name }}-db-secret 
                   key: MONGO_INITDB_ROOT_PASSWORD
 
             - name: MONGO_INITDB_DATABASE
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-secret
+                  name: {{ .Release.Name }}-db-secret 
                   key: MONGO_INITDB_DATABASE
           args:
             - "--replSet"
@@ -138,13 +125,7 @@ spec:
             - "/etc/mongo-keyfile/mongo-keyfile"
 
 
-              # resources:
-              # requests:
-              # cpu: 250m
-                # memory: 512Mi
-                # limits:
-              #           cpu: 1000m
-              # memory: 1Gi
+           
 
 
 

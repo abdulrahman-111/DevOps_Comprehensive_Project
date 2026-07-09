@@ -1,6 +1,13 @@
 backend/.env
 frontend/.env
 .env
+<<<<<<< HEAD
 k8s/back/back-secret.yaml
 
 
+=======
+k8s/back/*secrets.yaml
+Helm/mern-ecommerce/charts/backend/templates/back-secret.yaml
+Helm/mern-ecommerce/charts/backend/templates/back-secert.yaml
+Ansible/proj-with-roles/collections/
+>>>>>>> 6863384815fb384cbec5f7cfcd314582b798263b
