@@ -64,11 +64,11 @@ spec:
         volumes:
           - name: mongo-keyfile-secret
             secret:
-            secretName: mongodb-secret
-            defaultMode: 0400
-            items:
-            - key: mongo-keyfile
-              path: mongo-keyfile
+               secretName: mongodb-secret
+               defaultMode: 0400
+               items:
+                - key: mongo-keyfile
+                  path: mongo-keyfile
 
           - name: mongo-keyfile
             emptyDir: {}
@@ -139,7 +139,7 @@ spec:
 
 
               # resources:
-            # requests:
+              # requests:
               # cpu: 250m
                 # memory: 512Mi
                 # limits:
