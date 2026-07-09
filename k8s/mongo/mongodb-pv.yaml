@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: mongo-pv-1
+  name: mongo-pv-mo-1
   namespace: mongodb-proj-ns
 
 spec:
@@ -21,7 +21,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   namespace: mongodb-proj-ns
-  name: mongo-pv-2
+  name: mongo-pv-mo-2
 spec:
   capacity:
     storage: 2Gi
