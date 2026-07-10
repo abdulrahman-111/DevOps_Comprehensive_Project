@@ -4,94 +4,119 @@
 
 
 
-# play 1: Linux pre-config on ALL nodes 
-- name: play 1 - Common Linux configuration
-  hosts: k8s_cluster
-  become: true
-  roles:
-    - k8s-preconfig
+# # play 1: Linux pre-config on ALL nodes 
+# - name: play 1 - Common Linux configuration
+#   hosts: k8s_cluster
+#   become: true
+#   roles:
+#     - k8s-preconfig
 
-# play 2: Install containerd on ALL nodes 
-- name: play 2 - Install and configure containerd and docker 
-  hosts: k8s_cluster
-  become: true
-  roles:
-    - k8s-containerd-docker    
+# # play 2: Install containerd on ALL nodes 
+# - name: play 2 - Install and configure containerd and docker 
+#   hosts: k8s_cluster
+#   become: true
+#   roles:
+#     - k8s-containerd-docker    
 
-# play 3: Install k8s packages on ALL nodes 
-- name: play 3 - Install Kubernetes packages
-  hosts: k8s_cluster
-  become: true
-  roles:
-    - k8s-packges 
+# # play 3: Install k8s packages on ALL nodes 
+# - name: play 3 - Install Kubernetes packages
+#   hosts: k8s_cluster
+#   become: true
+#   roles:
+#     - k8s-packges 
 
-# play 4: Initialize control plane 
-- name: play 4 - Initialize Kubernetes control plane
-  hosts: k8s_control_plane
-  become: true
-  roles:
-    - k8s-control-plane
+# # play 4: Initialize control plane 
+# - name: play 4 - Initialize Kubernetes control plane
+#   hosts: k8s_control_plane
+#   become: true
+#   roles:
+#     - k8s-control-plane
 
-# play 5: Join workers
-- name: play 5 - Join worker nodes
-  hosts: k8s_workers
-  become: true
-  roles:
-    - k8s-workers
+# # play 5: Join workers
+# - name: play 5 - Join worker nodes
+#   hosts: k8s_workers
+#   become: true
+#   roles:
+#     - k8s-workers
 
 # play 6: Verify cluster
-- name: play 6 - Verify cluster health
-  hosts: k8s_control_plane
-  become: true
-  roles:
-    - k8s-verification
+# - name: play 6 - Verify cluster health
+#   hosts: k8s_control_plane
+#   become: true
+#   roles:
+#     - k8s-verification
 
-# play 7: SETup helm argocd  stack 
-- name: play 7 - SETup helm argocd stack
-  hosts: k8s_control_plane
-  become: true
-  roles:
-    - helm-argocd
+# # play 7: SETup helm argocd  stack 
+# - name: play 7 - SETup helm argocd stack
+#   hosts: k8s_control_plane
+#   become: true
+#   roles:
+#     - helm-argocd
 
-# play 8: SETup monitoring stack  WITH HELM
-- name: play 8 - Setup monitoring stack with Helm
+# # play 8: SETup monitoring stack  WITH HELM
+# - name: play 8 - Setup monitoring stack with Helm
+#   hosts: k8s_control_plane
+#   become: true
+#   environment:
+#     PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+#   pre_tasks:
+#     - name: Install required Python libraries for kubernetes.core
+#       ansible.builtin.yum:
+#         name:
+#           - python3-pip
+#           - python3-yaml        #  fixes "No module named yaml"
+#         state: present
+
+#     - name: Install PyYAML via pip (if yum package not available)
+#       ansible.builtin.pip:
+#         name:
+#           - pyyaml
+#           - kubernetes          # also needed by kubernetes.core modules
+#         state: present
+#         executable: pip3
+        
+#     - name: Verify helm is reachable
+#       ansible.builtin.command:
+#         cmd: helm version
+#       changed_when: false
+#       register: helm_check
+
+#     - name: Show helm version
+#       ansible.builtin.debug:
+#         msg: "{{ helm_check.stdout }}"
+
+#   roles:
+#     - prom-stack
+
+
+# # play 9: SETup SonarQube
+# - name: play 8 - SETup SonarQube stack
+#   hosts: sonar
+#   become: true
+#   roles:
+#     - sonar
+
+# # play 9: SETup Storage class 
+# - name: play 8 - SETup storage class  
+#   hosts: k8s_control_plane
+#   become: true
+#   roles:
+#     - k8s-storage
+
+- name: Deploy Jenkins on Kubernetes
   hosts: k8s_control_plane
   become: true
   environment:
     PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
   pre_tasks:
-    - name: Install required Python libraries for kubernetes.core
-      ansible.builtin.yum:
-        name:
-          - python3-pip
-          - python3-yaml        # ← fixes "No module named yaml"
-        state: present
-
-    - name: Install PyYAML via pip (if yum package not available)
+    - name: Install Python dependencies for kubernetes.core
       ansible.builtin.pip:
         name:
           - pyyaml
-          - kubernetes          # also needed by kubernetes.core modules
+          - kubernetes
         state: present
         executable: pip3
-        
-    - name: Verify helm is reachable
-      ansible.builtin.command:
-        cmd: helm version
-      changed_when: false
-      register: helm_check
-
-    - name: Show helm version
-      ansible.builtin.debug:
-        msg: "{{ helm_check.stdout }}"
-
   roles:
-    - prom-stack
+    - jenkins_k8s
 
 
-# play 9: SETup SonarQube
-- name: play 8 - SETup SonarQube stack
-  hosts: sonar
-  become: true
-  roles:
-    - sonar
